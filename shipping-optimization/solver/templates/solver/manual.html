@@ -1,0 +1,221 @@
+{% extends "./base.html" %}
+
+{% block content %}
+<div class="col-md-10 offset-md-1" style="margin-top: 50px; margin-bottom: 50px">
+    <h3 style="margin-bottom: 20px;">Input</h3>
+    <div class="row">
+        <div class="col-sm-6 mb-3 mb-sm-0">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title" style="margin-bottom: 20px;">Products</h5>
+                    <form action="{% url 'manual' %}" method="post" id="productSelectionForm">
+                        {% csrf_token %}
+                        <input type="hidden" name="form_type" value="PRODUCTS">
+                        <div class="form-floating mb-3">
+                            {% for product in availableProducts %}
+                            <div>
+                                <input type="checkbox" class="product-checkbox"
+                                    data-product-volume="{{ product.volume }}" data-product-name="{{ product.name }}"
+                                    data-product-index="{{ forloop.counter }}">
+                                product name: {{ product.name }}, volume: {{product.volume}}
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card" style="margin-top: 20px; display: none;" id="productInputForm">
+                <div class="card-body">
+                    <form action="{% url 'manual' %}" method='post'>
+                        {% csrf_token %}
+                        <input type="hidden" name="form_type" value="PRODUCTS_INFORMATION">
+                        <div id="productInputsContainer"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 mb-3 mb-sm-0">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title" style="margin-bottom: 20px;">Trucks</h5>
+                    <form action="{% url 'manual' %}" method="post" id="truckSelectionForm">
+                        {% csrf_token %}
+                        <input type="hidden" name="form_type" value="TRUCKS">
+                        <div class="form-floating mb-3">
+                            {% for truckType in availableTruckTypes %}
+                            <div>
+                                <input type="checkbox" class="truck-checkbox" data-truck-name="{{ truckType.name }}"
+                                    data-truck-capacity="{{ truckType.capacity }}"
+                                    data-truck-index="{{ forloop.counter }}">
+                                {{ truckType.name }} capacity: {{ truckType.capacity }}
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card" style="margin-top: 20px; display: none;" id="truckInputForm">
+                <div class="card-body">
+                    <form action="{% url 'manual' %}" method='post'>
+                        {% csrf_token %}
+                        <input type="hidden" name="form_type" value="TRUCKS_INFORMATION">
+                        <div id="truckInputsContainer"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <a id="solve" class="btn btn-secondary" style="margin-top: 30px;">SOLVE</a>
+    <form id="solveForm" action="/result/" method="POST" style="display:none;">
+        {% csrf_token %}
+        <input type="hidden" name="numberOfProducts" id="numberOfProducts">
+        <input type="hidden" name="numberOfTruckTypes" id="numberOfTruckTypes">
+        <input type="hidden" name="productVolumes" id="productVolumes">
+        <input type="hidden" name="productDemandQuantity" id="productDemandQuantity">
+        <input type="hidden" name="truckTypeCapacities" id="truckTypeCapacities">
+        <input type="hidden" name="numberOfTrucksPerType" id="numberOfTrucksPerType">
+    </form>
+    </div>
+
+<script>
+
+    document.getElementById('solve').addEventListener('click', function () {
+        let productInputsContainer = document.getElementById('productInputsContainer');
+        let truckInputsContainer = document.getElementById('truckInputsContainer');
+
+        products = []
+        truckTypes = []
+        productsVolumes = []
+        truckTypesCapacities = []
+
+        if (productInputsContainer.children.length === 0 || truckInputsContainer.children.length === 0) {
+            alert('Please select at least one product and one truck type');
+            return;
+        }
+        for (let i = 0; i < productInputsContainer.children.length; i++) {
+            let productInput = productInputsContainer.children[i].querySelector('input');
+            if (!productInput.value) {
+                alert('Please fill in all product demand fields');
+                return;
+            }
+
+
+            products.push(parseFloat(productInput.value));
+            productsVolumes.push(parseFloat(productInput.getAttribute('data-product-volume')));
+
+        }
+
+        for (let i = 0; i < truckInputsContainer.children.length; i++) {
+            let truckType = truckInputsContainer.children[i].querySelector('input');
+            if (!truckType.value) {
+                alert('Please fill in all product demand fields');
+                return;
+            }
+         
+            truckTypes.push(parseFloat(truckType.value));
+            truckTypesCapacities.push(parseFloat(truckType.getAttribute('data-truck-capacity')));
+
+        }
+
+        payload = {
+            "numberOfProducts": products.length,
+            "numberOfTruckTypes": truckTypes.length,
+            "productVolumes": productsVolumes,
+            "productDemandQuantity": products,
+            "truckTypeCapacities": truckTypesCapacities,
+            "numberOfTrucksPerType": truckTypes
+        }
+
+        document.getElementById('numberOfProducts').value = payload.numberOfProducts;
+        document.getElementById('numberOfTruckTypes').value = payload.numberOfTruckTypes;
+        document.getElementById('productVolumes').value = JSON.stringify(payload.productVolumes);  
+        document.getElementById('productDemandQuantity').value = JSON.stringify(payload.productDemandQuantity); 
+        document.getElementById('truckTypeCapacities').value = JSON.stringify(payload.truckTypeCapacities);
+        document.getElementById('numberOfTrucksPerType').value = JSON.stringify(payload.numberOfTrucksPerType);
+
+        var submitForm = document.getElementById('solveForm');
+        submitForm.submit();
+
+    });
+
+    function getCSRFToken() {
+  const csrfToken = document.cookie.match(/csrftoken=([\w-]+)/);
+  return csrfToken ? csrfToken[1] : null;
+}
+
+    document.querySelectorAll('.product-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', function () {
+            let productInputForm = document.getElementById('productInputForm');
+            let productInputsContainer = document.getElementById('productInputsContainer');
+
+            if (this.checked) {
+                let productIndex = this.getAttribute('data-product-index');
+                let productName = this.getAttribute('data-product-name');
+                let productVolume = this.getAttribute('data-product-volume');
+
+                let productDiv = document.createElement('div');
+                productDiv.setAttribute('id', 'product_' + productIndex);
+                productDiv.innerHTML = `
+                    <p>${productName}</p>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-floating mb-3">
+                                <input type="number" data-product-volume=${productVolume} class="form-control" name="product_demand_${productIndex}" required>
+                                <label>Demand (quantity)</label>
+                            </div>
+                        </div>
+                    </div>`;
+                productInputsContainer.appendChild(productDiv);
+                productInputForm.style.display = 'block';
+            } else {
+                let productDiv = document.getElementById('product_' + this.getAttribute('data-product-index'));
+                if (productDiv) {
+                    productDiv.remove();
+                }
+                if (productInputsContainer.children.length === 0) {
+                    productInputForm.style.display = 'none';
+                }
+            }
+        });
+    });
+
+    document.querySelectorAll('.truck-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', function () {
+            let truckInputForm = document.getElementById('truckInputForm');
+            let truckInputsContainer = document.getElementById('truckInputsContainer');
+
+            if (this.checked) {
+                let truckIndex = this.getAttribute('data-truck-index');
+                let truckName = this.getAttribute('data-truck-name');
+                let truckCapacity = this.getAttribute('data-truck-capacity');
+
+                let truckDiv = document.createElement('div');
+                truckDiv.setAttribute('id', 'truck_' + truckIndex);
+                truckDiv.innerHTML = `
+                    <p>${truckName}</p>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-floating mb-3">
+                                <input type="number" data-truck-capacity=${truckCapacity} class="form-control" name="truck_number_per_type_${truckIndex}" required>
+                                <label>Number of trucks (per type)</label>
+                            </div>
+                        </div>
+                    </div>`;
+                truckInputsContainer.appendChild(truckDiv);
+                truckInputForm.style.display = 'block';
+            } else {
+                let truckDiv = document.getElementById('truck_' + this.getAttribute('data-truck-index'));
+                if (truckDiv) {
+                    truckDiv.remove();
+                }
+                if (truckInputsContainer.children.length === 0) {
+                    truckInputForm.style.display = 'none';
+                }
+            }
+        });
+    });
+</script>
+
+{% endblock %}

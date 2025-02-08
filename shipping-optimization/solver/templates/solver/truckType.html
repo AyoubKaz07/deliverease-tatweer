@@ -1,0 +1,44 @@
+{% extends "./base.html" %}
+
+{% block content %}
+    <div class="col-md-10 offset-md-1" style="margin-top: 50px; margin-bottom: 50px;">
+        <h1 class="mb-4">Create a New Truck Type</h1>
+        
+        {% if form.errors %}
+            <div class="alert alert-danger">
+                <ul>
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+        
+        <div class="card">
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="form-group">
+                        <label for="{{ form.name.id_for_label }}">Truck Type Name</label>
+                        {{ form.name }}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.capacity.id_for_label }}">Truck Type capacity</label>
+                        {{ form.capacity }}
+                    </div>
+                    
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">Create Truck Type</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+{% endblock content %}

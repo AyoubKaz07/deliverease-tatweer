@@ -1,0 +1,59 @@
+{% extends "./base.html" %}
+
+{% block content %}
+    <div class="col-md-10 offset-md-1" style="margin-top: 50px; margin-bottom: 50px">
+        <h1 style="margin-bottom: 20px;">Solution: {{ status }}</h1>
+        
+        {% if canShowTable %}
+            <h3 style="margin-bottom: 30px">Average fill rate: {{ averageFillRate }}</h3>
+            <div class="row">
+                <div class="col-sm-6 mb-3 mb-sm-0">
+                    <table class="table table-hover table-bordered">
+                        <thead class="table-dark">
+                            <tr>
+                                <th scope="col">Trucks</th>
+                                {% for i in numberOfProducts %}
+                                    <th scope="col">Product {{ i }}</th>
+                                {% endfor %}
+                                <th scope="col">Fill rate (%)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for key, value in solution.items %}
+                                <tr>
+                                    <td>{{ key }}</td>
+                                    {% for i in value %}
+                                        <td>{{ i }}</td>
+                                    {% endfor %}
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-sm-6 mb-3 mb-sm-0">
+                    <div>{{ trucksUsedBarPlot | safe }}</div>
+                    <div>{{ truckFillRateBarPlot | safe }}</div>
+                </div>
+            </div>
+        {% else %}
+            <div class="card">
+                <div class="card-header">Explanation</div>
+                <div class="card-body">
+                    <h5 class="card-title">Why are you getting <strong>Infeasible</strong>?</h5>
+                    <p class="card-text" style="text-align: justify;">
+                        If you encounter an "infeasible" status, it means that the constraints of your optimization problem cannot be satisfied simultaneously, leading to no feasible solution.
+                        <br><br>
+                        To resolve this, check:
+                        <ul>
+                            <li>Model formulation accuracy.</li>
+                            <li>Conflicting or overly restrictive constraints.</li>
+                            <li>Variable bounds and data accuracy.</li>
+                            <li>Relaxing constraints if necessary.</li>
+                            <li>Consulting domain experts for guidance.</li>
+                        </ul>
+                    </p>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
