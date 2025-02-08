@@ -3,6 +3,7 @@ import { DriverService } from "services/driverService";
 import { CompanyService } from "services/companyService";
 import { AlertService } from "services/alertsService";
 import { DeliveryService } from "services/deliveryService";
+import { sendEmail } from "../backend/lib/mail/nodeMailer";
 
 export async function notifyCompanyOfDriver(driverId: string, message: {title: string, body: string}, location?: any) {
     const companyId = await DriverService.getCompanyByDriverId(driverId);
@@ -21,4 +22,9 @@ export async function notifyCompanyOfDriver(driverId: string, message: {title: s
         delivery_id: deliveryId,
     }
     await AlertService.addAlert(alert);
+
+
+    // Send email to the company
+    const companyEmail = await CompanyService.getCompanyEmail(companyId);
+    await sendEmail(companyEmail, message.title, message.body);
 }
