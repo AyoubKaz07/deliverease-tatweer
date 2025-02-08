@@ -38,8 +38,8 @@ data = {
 
 from utils.utils import calculate_features
 
-item = 1
-store = 1 
+item = 9
+store = 8 
 calculated_features = calculate_features(item, store)
 
 print(calculated_features)

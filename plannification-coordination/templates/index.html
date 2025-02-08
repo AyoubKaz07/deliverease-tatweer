@@ -13,7 +13,7 @@
             padding: 20px;
             text-align: center;
         }
-
+    
         form {
             background: white;
             padding: 20px;
@@ -22,21 +22,36 @@
             max-width: 400px;
             margin: auto;
         }
-
+    
         label {
             display: block;
             margin-top: 10px;
             text-align: left;
         }
-
-        input {
+    
+        input,
+        select {
             width: 100%;
             padding: 8px;
             margin-top: 5px;
             border: 1px solid #ccc;
             border-radius: 4px;
+            font-size: 16px;
         }
-
+    
+        select {
+            appearance: none;
+            background-color: #fff;
+            background-image: linear-gradient(45deg, transparent 50%, #ccc 50%),
+                              linear-gradient(135deg, #ccc 50%, transparent 50%),
+                              linear-gradient(to bottom, #fff 0%, #fff 100%);
+            background-position: calc(100% - 20px) calc(1em + 2px), calc(100% - 15px) calc(1em + 2px), 0 0;
+            background-repeat: no-repeat;
+            background-size: 5px 5px, 5px 5px, 100% 100%;
+            padding-right: 30px; /* Space for the custom arrow */
+            cursor: pointer;
+        }
+    
         button {
             background: #007BFF;
             color: white;
@@ -47,11 +62,11 @@
             width: 100%;
             border-radius: 4px;
         }
-
+    
         button:hover {
             background: #0056b3;
         }
-
+    
         .prediction-result {
             margin-top: 30px;
             padding: 20px;
@@ -62,11 +77,11 @@
             margin: auto;
             text-align: left;
         }
-
+    
         .prediction-result h3 {
             margin-top: 0;
         }
-
+    
         .error-message {
             margin-top: 30px;
             padding: 20px;
@@ -79,6 +94,7 @@
             text-align: center;
         }
     </style>
+    
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const form = document.getElementById('predictionForm');
@@ -130,9 +146,49 @@
 <body>
     <h2>Demand Prediction</h2>
     <form id="predictionForm">
-        <label>Store Cluster: <input min="0" max="6" type="number" id="store" required></label>
-        <label>Item Cluster: <input min="0" max="5" type="number" id="item" required></label>
-
+        <label for="store">Store 
+            <select id="store" required>
+              <option value="" disabled selected>Select a store</option>
+              <option value="1">Store 1</option>
+              <option value="2">Store 2</option>
+              <option value="3">Store 3</option>
+              <option value="4">Store 4</option>
+              <option value="5">Store 5</option>
+              <option value="6">Store 6</option>
+              <option value="7">Store 7</option>
+              <option value="8">Store 8</option>
+              <option value="9">Store 9</option>
+              <option value="10">Store 10</option>
+            </select>
+          </label>
+          
+          <label for="item">Item 
+            <select id="item" required>
+              <option value="" disabled selected>Select an item</option>
+              <option value="1">Item 1</option>
+              <option value="2">Item 2</option>
+              <option value="3">Item 3</option>
+              <option value="4">Item 4</option>
+              <option value="5">Item 5</option>
+              <option value="6">Item 6</option>
+              <option value="7">Item 7</option>
+              <option value="8">Item 8</option>
+              <option value="9">Item 9</option>
+              <option value="10">Item 10</option>
+              <option value="11">Item 11</option>
+              <option value="12">Item 12</option>
+              <option value="13">Item 13</option>
+              <option value="14">Item 14</option>
+              <option value="15">Item 15</option>
+              <option value="16">Item 16</option>
+              <option value="17">Item 17</option>
+              <option value="18">Item 18</option>
+              <option value="19">Item 19</option>
+              <option value="20">Item 20</option>
+              <option value="21">Item 21</option>
+            </select>
+          </label>
+          
         <button type="submit">Predict</button>
     </form>
 

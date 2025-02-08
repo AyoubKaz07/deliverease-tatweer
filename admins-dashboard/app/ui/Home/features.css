@@ -1,0 +1,113 @@
+.features {
+  padding-top:60px ;
+  padding-bottom:60px ;
+  background-color: #fff;
+ 
+ }
+ .features .container {
+   margin: auto;
+ display: flex;
+ flex-wrap: wrap;
+ margin-top: 40px;
+
+ }
+ .features  h1 {
+  text-align: center;
+  color: var(--main, #2080E2);
+
+/* Heading 1/Bold */
+font-family: Poppins;
+font-size: 48px;
+font-style: normal;
+font-weight: 700;
+line-height: 120%; /* 57.6px */
+letter-spacing: 0.24px;
+ }
+ .features .feat {
+  flex-basis: 410px;
+
+  margin-right: 10px;
+  flex-grow: 1;
+  flex-shrink: 0;
+ }
+ .features .feat {
+   padding: 20px;
+   text-align: center;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+ }
+ .features .feat .img-par {
+  background-image: url('/assets/par.png');
+
+ }
+ .features .feat .img-cost {
+  background-image: url('/assets/cost.png');
+
+ }
+ .features .feat .img-manag {
+  background-image: url('/assets/manag.png');
+
+ }
+ .img-icon  {
+  border-radius: 50%;
+  background-size: 90px 90px;
+  
+  background-position: center center !important;
+  background-repeat: no-repeat  !important;
+
+ width: 150px;
+height: 150px;
+background: var(--1SM-Surface2, #D8E4E8);
+
+ }
+ .features .feat h3 {
+   margin: 20px 0;
+   color: var(--Netral-Text, #404040);
+text-align: center;
+height: 120px;
+display: flex;
+align-items: center;
+
+
+/* Heading 3/Bold */
+font-family: Poppins;
+font-size: 38px;
+font-style: normal;
+font-weight: 700;
+line-height: 130%; /* 49.4px */
+letter-spacing: 0.19px;
+ 
+ }
+ .features .feat p {
+
+   color: var(--Netral-Text, #404040);
+ width: min(100%,410px);
+
+/* Body 1/Regular */
+font-family: Poppins;
+font-size: 18px;
+font-style: normal;
+font-weight: 400;
+line-height: 150%; /* 27px */
+letter-spacing: 0.09px;
+ height: 270px;
+ display: flex;
+
+ }
+
+ @media (max-width:1533px) {
+  .features .feat p {
+      align-items: center;
+      height: fit-content;
+      
+      
+  }
+  .features .container {
+     flex-direction: column;
+     gap: 20px;
+  }
+  .features .feat h3 {
+      height: fit-content;
+  }
+ }

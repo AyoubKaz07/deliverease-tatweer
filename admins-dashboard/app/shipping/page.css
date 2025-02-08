@@ -1,0 +1,25 @@
+
+.ships {
+    grid-column: 1 / 2;
+    grid-row: 1 / 2;
+  }
+  
+    @media (max-width: 768px) {
+   
+  
+    .admin-data {
+      grid-column: 1 / 2;
+      grid-row: 1 / 2;
+    }
+  
+    .card {
+      grid-column: 1 / 2;
+      grid-row: 2 / 3;
+    }
+  
+    .history-transactions {
+      grid-column: 1 / 2;
+      grid-row: 3 / 4;
+    }
+  }
+  
